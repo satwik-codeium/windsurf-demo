@@ -1,4 +1,5 @@
 // UI Controls
+import { gameState } from './gameState.js';
 
 function loadDarkMode() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
@@ -10,13 +11,25 @@ function saveDarkMode(isDarkMode) {
     localStorage.setItem('darkMode', isDarkMode);
 }
 
+function loadInvincibilityMode() {
+    const isInvincible = localStorage.getItem('invincibilityMode') === 'true';
+    gameState.isInvincible = isInvincible;
+    document.getElementById('invincibility-toggle').checked = isInvincible;
+}
+
+function saveInvincibilityMode(isInvincible) {
+    localStorage.setItem('invincibilityMode', isInvincible);
+}
+
 export function initUI() {
     const settingsIcon = document.getElementById('settings-icon');
     const settingsPanel = document.getElementById('settings-panel');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const invincibilityToggle = document.getElementById('invincibility-toggle');
 
     // Load dark mode preference
     loadDarkMode();
+    loadInvincibilityMode();
 
     // Toggle settings panel
     settingsIcon.addEventListener('click', (e) => {
@@ -41,5 +54,12 @@ export function initUI() {
         const isDarkMode = e.target.checked;
         document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : '');
         saveDarkMode(isDarkMode);
+    });
+
+    // Handle invincibility toggle
+    invincibilityToggle.addEventListener('change', (e) => {
+        const isInvincible = e.target.checked;
+        gameState.isInvincible = isInvincible;
+        saveInvincibilityMode(isInvincible);
     });
 }

@@ -242,6 +242,13 @@
                     <span class="toggle-slider"></span>
                 </label>
             </div>
+            <div class="control-item">
+                <span>Invincibility Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="invincibility-toggle" onclick="toggleInvincibility()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
         </div>
         <div class="control-group">
             <h3>General</h3>
@@ -254,6 +261,9 @@
     <script>
         function toggleDarkMode() {
             document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? '' : 'dark');
+        }
+        function toggleInvincibility() {
+            // This will be handled by the event listener in ui.js
         }
     </script>
     <script type="module" src="{{ url_for('static', filename='js/game.js') }}"></script>

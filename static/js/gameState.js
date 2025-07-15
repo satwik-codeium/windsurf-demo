@@ -9,6 +9,7 @@ export const gameState = {
         velocityY: 0
     }],
     playerName: 'Windsurf',
+    isInvincible: false,
     camera: {
         x: 0,
         y: 0

@@ -59,8 +59,10 @@ export function handlePlayerAICollisions() {
                 }
                 // AI is bigger
                 else if (aiSize > playerSize * COLLISION_THRESHOLD) {
-                    ai.score += playerCell.score + 100;
-                    playerCellsToRemove.add(playerCellIndex);
+                    if (!gameState.isInvincible) {
+                        ai.score += playerCell.score + 100;
+                        playerCellsToRemove.add(playerCellIndex);
+                    }
                 }
             }
         });
