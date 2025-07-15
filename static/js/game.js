@@ -95,6 +95,9 @@ async function initGame() {
         // Verify game state
         verifyGameState();
 
+        window.gameState = gameState;
+        window.mouse = mouse;
+
         // Start game loop
         console.log('Starting game loop');
         gameLoop();
