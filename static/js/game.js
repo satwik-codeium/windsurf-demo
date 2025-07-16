@@ -92,6 +92,8 @@ async function initGame() {
         initUI();
         console.log('UI initialized');
 
+        window.gameInitialized = true;
+
         // Verify game state
         verifyGameState();
 
