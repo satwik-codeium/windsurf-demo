@@ -175,3 +175,40 @@ export function respawnEntities() {
         });
     }
 }
+
+export function handleProjectileCollisions() {
+    gameState.projectiles.forEach((projectile, projectileIndex) => {
+        gameState.food = gameState.food.filter(food => {
+            const distance = getDistance(projectile, food);
+            const projectileSize = getSize(projectile.score);
+            
+            if (distance < projectileSize + FOOD_SIZE) {
+                projectile.score += FOOD_SCORE;
+                return false; // Remove food
+            }
+            return true;
+        });
+        
+        gameState.aiPlayers = gameState.aiPlayers.filter(ai => {
+            const distance = getDistance(projectile, ai);
+            const projectileSize = getSize(projectile.score);
+            const aiSize = getSize(ai.score);
+            
+            if (distance < projectileSize + aiSize) {
+                if (projectileSize > aiSize * COLLISION_THRESHOLD) {
+                    projectile.score += ai.score + 100;
+                    return false; // Remove AI
+                }
+                else if (aiSize > projectileSize * COLLISION_THRESHOLD) {
+                    ai.score += projectile.score + 100;
+                    gameState.projectiles.splice(projectileIndex, 1);
+                    return true; // Keep AI
+                }
+            }
+            return true;
+        });
+    });
+    
+    // Remove projectiles that were consumed (filter out undefined/null)
+    gameState.projectiles = gameState.projectiles.filter(p => p != null);
+}

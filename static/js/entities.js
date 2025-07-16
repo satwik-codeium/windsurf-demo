@@ -11,7 +11,9 @@ import {
     MERGE_COOLDOWN,
     MERGE_DISTANCE,
     MERGE_FORCE,
-    MERGE_START_FORCE
+    MERGE_START_FORCE,
+    PROJECTILE_MASS_FRACTION,
+    PROJECTILE_SPEED
 } from './config.js';
 
 const AI_NAMES = [
@@ -242,6 +244,70 @@ export function handlePlayerSplit() {
     );
 
     cellsToSplit.forEach(cell => splitPlayerCell(cell));
+}
+
+export function handleProjectileShoot() {
+    if (gameState.playerCells.length === 0) return;
+    
+    const largestCell = gameState.playerCells.reduce((largest, cell) => 
+        cell.score > largest.score ? cell : largest
+    );
+    
+    // Calculate minimum mass needed (must have enough to shoot 1/16th)
+    const minMassToShoot = 16; // So 1/16th is at least 1
+    if (largestCell.score < minMassToShoot) return;
+    
+    // Calculate shoot direction (towards mouse)
+    const dx = mouse.x - window.innerWidth / 2;
+    const dy = mouse.y - window.innerHeight / 2;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    if (distance === 0) return;
+    
+    const direction = {
+        x: dx / distance,
+        y: dy / distance
+    };
+    
+    // Calculate projectile mass
+    const projectileMass = largestCell.score * PROJECTILE_MASS_FRACTION;
+    
+    // Create projectile
+    const projectile = {
+        x: largestCell.x,
+        y: largestCell.y,
+        score: projectileMass,
+        velocityX: direction.x * PROJECTILE_SPEED,
+        velocityY: direction.y * PROJECTILE_SPEED,
+        sourceCell: largestCell // Reference to return mass to
+    };
+    
+    largestCell.score -= projectileMass;
+    
+    gameState.projectiles.push(projectile);
+}
+
+export function updateProjectiles() {
+    gameState.projectiles = gameState.projectiles.filter(projectile => {
+        // Update position
+        projectile.x += projectile.velocityX;
+        projectile.y += projectile.velocityY;
+        
+        if (projectile.x <= 0 || projectile.x >= WORLD_SIZE || 
+            projectile.y <= 0 || projectile.y >= WORLD_SIZE) {
+            if (gameState.playerCells.includes(projectile.sourceCell)) {
+                projectile.sourceCell.score += projectile.score;
+            } else if (gameState.playerCells.length > 0) {
+                const largestCell = gameState.playerCells.reduce((largest, cell) => 
+                    cell.score > largest.score ? cell : largest
+                );
+                largestCell.score += projectile.score;
+            }
+            return false; // Remove projectile
+        }
+        
+        return true; // Keep projectile
+    });
 }
 
 export function updateAI() {

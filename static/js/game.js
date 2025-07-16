@@ -1,7 +1,7 @@
 import { gameState, mouse } from './gameState.js';
 import { initRenderer, resizeCanvas, drawGame, drawMinimap, updateLeaderboard } from './renderer.js';
-import { updatePlayer, updateAI, initEntities, handlePlayerSplit } from './entities.js';
-import { handleFoodCollisions, handlePlayerAICollisions, handleAIAICollisions, respawnEntities } from './collisions.js';
+import { updatePlayer, updateAI, initEntities, handleProjectileShoot, updateProjectiles } from './entities.js';
+import { handleFoodCollisions, handlePlayerAICollisions, handleAIAICollisions, respawnEntities, handleProjectileCollisions } from './collisions.js';
 import { initUI } from './ui.js';
 
 function setupInputHandlers() {
@@ -13,9 +13,9 @@ function setupInputHandlers() {
         mouse.y = e.clientY;
     });
 
-    // Mouse click for splitting
+    // Mouse click for shooting projectiles
     canvas.addEventListener('click', (e) => {
-        handlePlayerSplit();
+        handleProjectileShoot();
     });
 
     // Window resize
@@ -26,6 +26,7 @@ function setupInputHandlers() {
 
 function checkCollisions() {
     handleFoodCollisions();
+    handleProjectileCollisions();
     handlePlayerAICollisions();
     handleAIAICollisions();
     respawnEntities();
@@ -50,6 +51,7 @@ function verifyGameState() {
 
 function gameLoop() {
     updatePlayer();
+    updateProjectiles();
     updateAI();
     checkCollisions();
     updateLeaderboard();
