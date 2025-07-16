@@ -19,6 +19,11 @@ export const MERGE_COOLDOWN = 10000;  // Time in ms before cells can merge
 export const MERGE_FORCE = 0.3;       // Strength of the merging force
 export const MERGE_START_FORCE = 0.1; // Initial attraction force (before merge cooldown)
 
+// Projectile mechanics
+export const PROJECTILE_MASS_FRACTION = 1/16;  // Fraction of cell mass to shoot
+export const PROJECTILE_SPEED = 8;             // Speed of projectile movement
+export const PROJECTILE_COLOR = '#FF6B6B';     // Color for projectiles
+
 export const COLORS = {
     PLAYER: '#008080',  // Teal color
     MINIMAP: {

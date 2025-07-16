@@ -1,6 +1,6 @@
 import { gameState } from './gameState.js';
 import { getSize, calculateCenterOfMass } from './utils.js';
-import { WORLD_SIZE, COLORS, FOOD_SIZE } from './config.js';
+import { WORLD_SIZE, COLORS, FOOD_SIZE, PROJECTILE_COLOR } from './config.js';
 
 let canvas, ctx, minimapCanvas, minimapCtx, scoreElement, leaderboardContent;
 
@@ -102,6 +102,17 @@ export function drawGame() {
         if (screenX >= -size && screenX <= canvas.width + size &&
             screenY >= -size && screenY <= canvas.height + size) {
             drawCellWithName(screenX, screenY, cell.score, COLORS.PLAYER, gameState.playerName);
+        }
+    });
+
+    gameState.projectiles.forEach(projectile => {
+        const screenX = projectile.x - gameState.camera.x;
+        const screenY = projectile.y - gameState.camera.y;
+        const size = getSize(projectile.score);
+        
+        if (screenX >= -size && screenX <= canvas.width + size &&
+            screenY >= -size && screenY <= canvas.height + size) {
+            drawCircle(screenX, screenY, projectile.score, PROJECTILE_COLOR, false);
         }
     });
 
