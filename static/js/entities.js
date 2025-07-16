@@ -11,7 +11,8 @@ import {
     MERGE_COOLDOWN,
     MERGE_DISTANCE,
     MERGE_FORCE,
-    MERGE_START_FORCE
+    MERGE_START_FORCE,
+    COLORS
 } from './config.js';
 
 const AI_NAMES = [
@@ -272,7 +273,7 @@ export function initEntities() {
         gameState.food.push({
             x: pos.x,
             y: pos.y,
-            color: `hsl(${Math.random() * 360}, 50%, 50%)`
+            color: `hsl(${COLORS.FOOD_BASE_HUE + (Math.random() - 0.5) * 60}, 50%, 50%)`
         });
     }
 
@@ -283,7 +284,7 @@ export function initEntities() {
             x: pos.x,
             y: pos.y,
             score: AI_STARTING_SCORE,
-            color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+            color: `hsl(${COLORS.AI_BASE_HUE + (Math.random() - 0.5) * 60}, 70%, 50%)`,
             direction: Math.random() * Math.PI * 2,
             name: getUnusedAIName()
         };
@@ -306,7 +307,7 @@ export function respawnAI() {
         x: pos.x,
         y: pos.y,
         score: AI_STARTING_SCORE,
-        color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+        color: `hsl(${COLORS.AI_BASE_HUE + (Math.random() - 0.5) * 60}, 70%, 50%)`,
         direction: Math.random() * Math.PI * 2,
         name: name
     };

@@ -21,6 +21,8 @@ export const MERGE_START_FORCE = 0.1; // Initial attraction force (before merge 
 
 export const COLORS = {
     PLAYER: '#008080',  // Teal color
+    FOOD_BASE_HUE: 180, // Base hue for food colors
+    AI_BASE_HUE: 60,    // Base hue for AI colors
     MINIMAP: {
         PLAYER: '#4CAF50',
         TOP_PLAYER: '#FFC107',

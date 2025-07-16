@@ -202,6 +202,27 @@
         input:checked + .toggle-slider:before {
             transform: translateX(20px);
         }
+        
+        /* Color picker styles */
+        input[type="color"] {
+            width: 40px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        input[type="range"] {
+            width: 100px;
+            margin-right: 10px;
+        }
+        
+        .control-item span:last-child {
+            font-size: 12px;
+            color: #ccc;
+            min-width: 40px;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -241,6 +262,31 @@
                     <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
                     <span class="toggle-slider"></span>
                 </label>
+            </div>
+        </div>
+        <div class="control-group">
+            <h3>Colors</h3>
+            <div class="control-item">
+                <span>Player Color</span>
+                <input type="color" id="player-color-picker" value="#008080">
+            </div>
+            <div class="control-item">
+                <span>Food Hue</span>
+                <input type="range" id="food-hue-slider" min="0" max="360" value="180">
+                <span id="food-hue-value">180°</span>
+            </div>
+            <div class="control-item">
+                <span>AI Hue</span>
+                <input type="range" id="ai-hue-slider" min="0" max="360" value="60">
+                <span id="ai-hue-value">60°</span>
+            </div>
+            <div class="control-item">
+                <span>Minimap Player</span>
+                <input type="color" id="minimap-player-color-picker" value="#4CAF50">
+            </div>
+            <div class="control-item">
+                <span>Reset Colors</span>
+                <button class="button" id="reset-colors-btn">Reset to Default</button>
             </div>
         </div>
         <div class="control-group">
