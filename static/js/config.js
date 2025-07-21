@@ -1,29 +1,37 @@
-export const WORLD_SIZE = 2000;
-export const FOOD_SIZE = 5;
-export const STARTING_SCORE = 100;
-export const AI_STARTING_SCORE = 50;  // Starting score for AI players
-export const FOOD_SCORE = 10;
-export const FOOD_COUNT = 100;
-export const AI_COUNT = 10;
-export const COLLISION_THRESHOLD = 1.1; // 10% size difference needed for consumption
+import { loadConfig } from './configLoader.js';
 
-// Split mechanics
-export const MIN_SPLIT_SCORE = 40;  // Minimum score needed to split
-export const SPLIT_VELOCITY = 12;   // Initial velocity of split cells
-export const MAX_PLAYER_CELLS = 16; // Maximum number of cells a player can have
-export const SPLIT_COOLDOWN = 5000; // Milliseconds before cells can merge back
-export const MERGE_DISTANCE = 2;    // Distance threshold for merging cells
+let config = null;
 
-// Merge mechanics
-export const MERGE_COOLDOWN = 10000;  // Time in ms before cells can merge
-export const MERGE_FORCE = 0.3;       // Strength of the merging force
-export const MERGE_START_FORCE = 0.1; // Initial attraction force (before merge cooldown)
-
-export const COLORS = {
-    PLAYER: '#008080',  // Teal color
-    MINIMAP: {
-        PLAYER: '#4CAF50',
-        TOP_PLAYER: '#FFC107',
-        OTHER: 'rgba(255, 255, 255, 0.3)'
+async function ensureConfig() {
+    if (!config) {
+        config = await loadConfig();
     }
-};
+    return config;
+}
+
+export const getConfig = async () => await ensureConfig();
+
+export let WORLD_SIZE, FOOD_SIZE, STARTING_SCORE, AI_STARTING_SCORE, FOOD_SCORE, FOOD_COUNT, AI_COUNT, COLLISION_THRESHOLD;
+export let MIN_SPLIT_SCORE, SPLIT_VELOCITY, MAX_PLAYER_CELLS, SPLIT_COOLDOWN, MERGE_DISTANCE;
+export let MERGE_COOLDOWN, MERGE_FORCE, MERGE_START_FORCE, COLORS;
+
+export async function initConfig() {
+    const cfg = await ensureConfig();
+    WORLD_SIZE = cfg.world.size;
+    FOOD_SIZE = cfg.rendering.foodSize;
+    STARTING_SCORE = cfg.gameplay.startingScore;
+    AI_STARTING_SCORE = cfg.gameplay.aiStartingScore;
+    FOOD_SCORE = cfg.gameplay.foodScore;
+    FOOD_COUNT = cfg.entities.foodCount;
+    AI_COUNT = cfg.entities.aiCount;
+    COLLISION_THRESHOLD = cfg.gameplay.collisionThreshold;
+    MIN_SPLIT_SCORE = cfg.gameplay.minSplitScore;
+    SPLIT_VELOCITY = cfg.gameplay.splitVelocity;
+    MAX_PLAYER_CELLS = cfg.gameplay.maxPlayerCells;
+    SPLIT_COOLDOWN = cfg.gameplay.splitCooldown;
+    MERGE_DISTANCE = cfg.gameplay.mergeDistance;
+    MERGE_COOLDOWN = cfg.gameplay.mergeCooldown;
+    MERGE_FORCE = cfg.gameplay.mergeForce;
+    MERGE_START_FORCE = cfg.gameplay.mergeStartForce;
+    COLORS = cfg.rendering.colors;
+}

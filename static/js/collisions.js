@@ -1,9 +1,16 @@
 import { gameState } from './gameState.js';
 import { getDistance, getSize, getRandomPosition, findSafeSpawnLocation } from './utils.js';
-import { FOOD_SIZE, FOOD_SCORE, COLLISION_THRESHOLD, FOOD_COUNT, AI_COUNT, STARTING_SCORE, WORLD_SIZE } from './config.js';
+import { getConfig } from './config.js';
 import { respawnAI } from './entities.js';
 
-export function handleFoodCollisions() {
+let FOOD_SIZE, FOOD_SCORE, COLLISION_THRESHOLD, FOOD_COUNT, AI_COUNT, STARTING_SCORE, WORLD_SIZE;
+
+export async function handleFoodCollisions() {
+    if (!FOOD_SIZE) {
+        const config = await getConfig();
+        FOOD_SIZE = config.rendering.foodSize;
+        FOOD_SCORE = config.gameplay.foodScore;
+    }
     // Player cells eating food
     for (const playerCell of gameState.playerCells) {
         gameState.food = gameState.food.filter(food => {
@@ -33,7 +40,12 @@ export function handleFoodCollisions() {
     }
 }
 
-export function handlePlayerAICollisions() {
+export async function handlePlayerAICollisions() {
+    if (!COLLISION_THRESHOLD) {
+        const config = await getConfig();
+        COLLISION_THRESHOLD = config.gameplay.collisionThreshold;
+        STARTING_SCORE = config.gameplay.startingScore;
+    }
     // Track changes to make after all collision checks
     const aiIndicesToRemove = new Set();
     const playerCellsToRemove = new Set();
@@ -86,7 +98,7 @@ export function handlePlayerAICollisions() {
 
     // Respawn player if all cells are gone
     if (gameState.playerCells.length === 0) {
-        const safePos = findSafeSpawnLocation(gameState);
+        const safePos = await findSafeSpawnLocation(gameState);
         gameState.playerCells.push({
             x: safePos.x,
             y: safePos.y,
@@ -97,7 +109,11 @@ export function handlePlayerAICollisions() {
     }
 }
 
-export function handleAIAICollisions() {
+export async function handleAIAICollisions() {
+    if (!COLLISION_THRESHOLD) {
+        const config = await getConfig();
+        COLLISION_THRESHOLD = config.gameplay.collisionThreshold;
+    }
     const aisToRemove = new Set();
     const scoreGains = new Map(); // Map of AI index to score gain
 
@@ -143,10 +159,16 @@ export function handleAIAICollisions() {
     });
 }
 
-export function respawnEntities() {
+export async function respawnEntities() {
+    if (!FOOD_COUNT) {
+        const config = await getConfig();
+        FOOD_COUNT = config.entities.foodCount;
+        AI_COUNT = config.entities.aiCount;
+        STARTING_SCORE = config.gameplay.startingScore;
+    }
     // Respawn food if needed
     while (gameState.food.length < FOOD_COUNT) {
-        const pos = getRandomPosition();
+        const pos = await getRandomPosition();
         gameState.food.push({
             x: pos.x,
             y: pos.y,
@@ -156,7 +178,7 @@ export function respawnEntities() {
 
     // Respawn AI players if needed
     while (gameState.aiPlayers.length < AI_COUNT) {
-        const safePos = findSafeSpawnLocation(gameState);
+        const safePos = await findSafeSpawnLocation(gameState);
         const newAI = respawnAI();
         newAI.x = safePos.x;
         newAI.y = safePos.y;
@@ -165,7 +187,7 @@ export function respawnEntities() {
 
     // Ensure player has at least one cell
     if (gameState.playerCells.length === 0) {
-        const safePos = findSafeSpawnLocation(gameState);
+        const safePos = await findSafeSpawnLocation(gameState);
         gameState.playerCells.push({
             x: safePos.x,
             y: safePos.y,

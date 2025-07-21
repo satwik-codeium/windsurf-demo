@@ -1,0 +1,34 @@
+{
+  "entities": {
+    "aiCount": 8,
+    "foodCount": 80
+  },
+  "gameplay": {
+    "aiStartingScore": 50,
+    "collisionThreshold": 1.1,
+    "foodScore": 10,
+    "maxPlayerCells": 16,
+    "mergeCooldown": 10000,
+    "mergeDistance": 2,
+    "mergeForce": 0.3,
+    "mergeStartForce": 0.1,
+    "minSplitScore": 40,
+    "splitCooldown": 5000,
+    "splitVelocity": 12,
+    "startingScore": 100
+  },
+  "rendering": {
+    "colors": {
+      "minimap": {
+        "other": "rgba(255, 255, 255, 0.3)",
+        "player": "#4CAF50",
+        "topPlayer": "#FFC107"
+      },
+      "player": "#008080"
+    },
+    "foodSize": 5
+  },
+  "world": {
+    "size": 1200
+  }
+}

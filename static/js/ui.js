@@ -1,4 +1,7 @@
 // UI Controls
+import { getConfig, initConfig } from './config.js';
+import { updateConfig } from './configLoader.js';
+import { initEntities } from './entities.js';
 
 function loadDarkMode() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
@@ -43,3 +46,56 @@ export function initUI() {
         saveDarkMode(isDarkMode);
     });
 }
+
+window.toggleDebugMode = function() {
+    const debugToggle = document.getElementById('debug-mode-toggle');
+    const debugControls = document.getElementById('debug-controls');
+    
+    if (debugToggle.checked) {
+        debugControls.style.display = 'block';
+        loadCurrentConfig();
+    } else {
+        debugControls.style.display = 'none';
+    }
+};
+
+async function loadCurrentConfig() {
+    try {
+        const config = await getConfig();
+        document.getElementById('world-size-input').value = config.world.size;
+        document.getElementById('ai-count-input').value = config.entities.aiCount;
+        document.getElementById('food-count-input').value = config.entities.foodCount;
+    } catch (error) {
+        console.error('Failed to load current config:', error);
+    }
+}
+
+window.applyDebugConfig = async function() {
+    const worldSize = parseInt(document.getElementById('world-size-input').value);
+    const aiCount = parseInt(document.getElementById('ai-count-input').value);
+    const foodCount = parseInt(document.getElementById('food-count-input').value);
+    
+    if (worldSize < 500 || worldSize > 5000 || aiCount < 1 || aiCount > 50 || foodCount < 10 || foodCount > 500) {
+        alert('Invalid configuration values. Please check the ranges.');
+        return;
+    }
+    
+    try {
+        const currentConfig = await getConfig();
+        const newConfig = {
+            ...currentConfig,
+            world: { ...currentConfig.world, size: worldSize },
+            entities: { ...currentConfig.entities, aiCount, foodCount }
+        };
+        
+        const success = await updateConfig(newConfig);
+        if (success) {
+            window.location.reload();
+        } else {
+            alert('Failed to update configuration.');
+        }
+    } catch (error) {
+        console.error('Error applying debug config:', error);
+        alert('Error applying configuration changes.');
+    }
+};

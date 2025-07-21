@@ -259,7 +259,7 @@ export function updateAI() {
     });
 }
 
-export function initEntities() {
+export async function initEntities() {
     // Clear existing entities
     gameState.food = [];
     gameState.aiPlayers = [];
@@ -288,6 +288,12 @@ export function initEntities() {
             name: getUnusedAIName()
         };
         gameState.aiPlayers.push(ai);
+    }
+
+    // Initialize player cells if empty
+    if (gameState.playerCells.length === 0) {
+        const { initGameState } = await import('./gameState.js');
+        await initGameState();
     }
 
     console.log('Entities initialized:', {

@@ -1,16 +1,23 @@
 import { gameState } from './gameState.js';
 import { getSize, calculateCenterOfMass } from './utils.js';
-import { WORLD_SIZE, COLORS, FOOD_SIZE } from './config.js';
+import { getConfig } from './config.js';
+
+let WORLD_SIZE, COLORS, FOOD_SIZE;
 
 let canvas, ctx, minimapCanvas, minimapCtx, scoreElement, leaderboardContent;
 
-export function initRenderer(canvasElements) {
+export async function initRenderer(canvasElements) {
     canvas = canvasElements.gameCanvas;
     ctx = canvas.getContext('2d');
     minimapCanvas = canvasElements.minimapCanvas;
     minimapCtx = minimapCanvas.getContext('2d');
     scoreElement = canvasElements.scoreElement;
     leaderboardContent = canvasElements.leaderboardContent;
+
+    const config = await getConfig();
+    WORLD_SIZE = config.world.size;
+    COLORS = config.rendering.colors;
+    FOOD_SIZE = config.rendering.foodSize;
 
     // Initial canvas setup
     resizeCanvas();

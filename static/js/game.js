@@ -3,6 +3,7 @@ import { initRenderer, resizeCanvas, drawGame, drawMinimap, updateLeaderboard } 
 import { updatePlayer, updateAI, initEntities, handlePlayerSplit } from './entities.js';
 import { handleFoodCollisions, handlePlayerAICollisions, handleAIAICollisions, respawnEntities } from './collisions.js';
 import { initUI } from './ui.js';
+import { initConfig } from './config.js';
 
 function setupInputHandlers() {
     const canvas = document.getElementById('gameCanvas');
@@ -24,11 +25,11 @@ function setupInputHandlers() {
     });
 }
 
-function checkCollisions() {
-    handleFoodCollisions();
-    handlePlayerAICollisions();
-    handleAIAICollisions();
-    respawnEntities();
+async function checkCollisions() {
+    await handleFoodCollisions();
+    await handlePlayerAICollisions();
+    await handleAIAICollisions();
+    await respawnEntities();
 }
 
 function verifyGameState() {
@@ -48,10 +49,10 @@ function verifyGameState() {
     }
 }
 
-function gameLoop() {
+async function gameLoop() {
     updatePlayer();
     updateAI();
-    checkCollisions();
+    await checkCollisions();
     updateLeaderboard();
     drawGame();
     drawMinimap();
@@ -61,6 +62,10 @@ function gameLoop() {
 async function initGame() {
     try {
         console.log('Initializing game...');
+        
+        // Initialize configuration first
+        await initConfig();
+        console.log('Configuration loaded');
         
         // Get DOM elements
         const elements = {
@@ -80,13 +85,13 @@ async function initGame() {
         console.log('DOM elements found');
 
         // Initialize game components in order
-        initRenderer(elements);
+        await initRenderer(elements);
         console.log('Renderer initialized');
         
         setupInputHandlers();
         console.log('Input handlers set up');
         
-        initEntities();
+        await initEntities();
         console.log('Entities initialized');
 
         initUI();

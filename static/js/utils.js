@@ -1,10 +1,16 @@
-import { WORLD_SIZE } from './config.js';
+import { getConfig } from './config.js';
+
+let WORLD_SIZE;
 
 export function getSize(score) {
     return Math.sqrt(score) + 20;
 }
 
-export function getRandomPosition() {
+export async function getRandomPosition() {
+    if (!WORLD_SIZE) {
+        const config = await getConfig();
+        WORLD_SIZE = config.world.size;
+    }
     return {
         x: Math.random() * WORLD_SIZE,
         y: Math.random() * WORLD_SIZE
@@ -27,12 +33,12 @@ export function calculateCenterOfMass(cells) {
     };
 }
 
-export function findSafeSpawnLocation(gameState, minDistance = 100) {
+export async function findSafeSpawnLocation(gameState, minDistance = 100) {
     const maxAttempts = 50;
     let attempts = 0;
     
     while (attempts < maxAttempts) {
-        const pos = getRandomPosition();
+        const pos = await getRandomPosition();
         let isSafe = true;
 
         // Check distance from AI players
@@ -67,7 +73,7 @@ export function findSafeSpawnLocation(gameState, minDistance = 100) {
     let maxMinDistance = 0;
 
     for (let i = 0; i < 20; i++) {
-        const pos = getRandomPosition();
+        const pos = await getRandomPosition();
         let minDistanceToPlayer = Infinity;
 
         // Check distance to all players and cells
