@@ -1,3 +1,4 @@
+
 export const WORLD_SIZE = 2000;
 export const FOOD_SIZE = 5;
 export const STARTING_SCORE = 100;
