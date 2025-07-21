@@ -3,6 +3,7 @@ import { initRenderer, resizeCanvas, drawGame, drawMinimap, updateLeaderboard } 
 import { updatePlayer, updateAI, initEntities, handlePlayerSplit } from './entities.js';
 import { handleFoodCollisions, handlePlayerAICollisions, handleAIAICollisions, respawnEntities } from './collisions.js';
 import { initUI } from './ui.js';
+import { loadConfig } from './config.js';
 
 function setupInputHandlers() {
     const canvas = document.getElementById('gameCanvas');
@@ -61,6 +62,9 @@ function gameLoop() {
 async function initGame() {
     try {
         console.log('Initializing game...');
+        
+        await loadConfig();
+        console.log('Configuration loaded');
         
         // Get DOM elements
         const elements = {

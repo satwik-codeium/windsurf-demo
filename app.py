@@ -4,14 +4,20 @@ import json
 
 app = Flask(__name__)
 
-# Game state
-WORLD_SIZE = 2000
-NUM_AI_PLAYERS = 10
-NUM_FOOD = 100
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+WORLD_SIZE = config['WORLD_SIZE']
+NUM_AI_PLAYERS = config['AI_COUNT']
+NUM_FOOD = config['FOOD_COUNT']
 
 @app.route('/')
 def index():
     return render_template('game.html')
+
+@app.route('/config')
+def get_config():
+    return jsonify(config)
 
 @app.route('/game_state')
 def game_state():
