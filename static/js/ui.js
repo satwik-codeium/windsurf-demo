@@ -20,10 +20,13 @@ export function initUI() {
     loadDarkMode();
 
     // Handle settings icon click to toggle checkbox (CSS handles the visual state)
-    settingsIcon.addEventListener('click', (e) => {
-        e.stopPropagation();
-        settingsToggle.checked = !settingsToggle.checked;
-    });
+    if (settingsIcon) {
+        settingsIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            settingsToggle.checked = !settingsToggle.checked;
+        });
+    }
 
     // Close settings when clicking outside
     document.addEventListener('click', (e) => {
