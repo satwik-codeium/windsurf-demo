@@ -11,23 +11,24 @@ function saveDarkMode(isDarkMode) {
 }
 
 export function initUI() {
-    const settingsIcon = document.getElementById('settings-icon');
     const settingsPanel = document.getElementById('settings-panel');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsIcon = document.getElementById('settings-icon');
 
     // Load dark mode preference
     loadDarkMode();
 
-    // Toggle settings panel
+    // Handle settings icon click to toggle checkbox (CSS handles the visual state)
     settingsIcon.addEventListener('click', (e) => {
-        e.stopPropagation();  // Prevent click from propagating to document
-        settingsPanel.classList.toggle('visible');
+        e.stopPropagation();
+        settingsToggle.checked = !settingsToggle.checked;
     });
 
     // Close settings when clicking outside
     document.addEventListener('click', (e) => {
-        if (!settingsPanel.contains(e.target) && settingsPanel.classList.contains('visible')) {
-            settingsPanel.classList.remove('visible');
+        if (!settingsPanel.contains(e.target) && settingsToggle.checked) {
+            settingsToggle.checked = false;
         }
     });
 
@@ -36,7 +37,7 @@ export function initUI() {
         e.stopPropagation();
     });
 
-    // Handle dark mode toggle
+    // Handle dark mode toggle - sync with localStorage
     darkModeToggle.addEventListener('change', (e) => {
         const isDarkMode = e.target.checked;
         document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : '');

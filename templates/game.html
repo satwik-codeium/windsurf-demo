@@ -13,6 +13,11 @@
             --canvas-color: #2d2d2d;
         }
 
+        #dark-mode-toggle:checked ~ body {
+            --bg-color: #1a1a1a;
+            --canvas-color: #2d2d2d;
+        }
+
         body {
             margin: 0;
             overflow: hidden;
@@ -33,6 +38,10 @@
             text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
         }
         :root[data-theme="dark"] #score {
+            color: #fff;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+        #dark-mode-toggle:checked ~ body #score {
             color: #fff;
             text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
         }
@@ -90,6 +99,7 @@
             width: 24px;
             height: 24px;
             fill: white;
+            pointer-events: none;
         }
         #settings-panel {
             position: absolute;
@@ -107,7 +117,7 @@
             opacity: 0;
             transform: scale(0.95);
         }
-        #settings-panel.visible {
+        #settings-toggle:checked ~ #settings-panel {
             display: block;
             opacity: 1;
             transform: scale(1);
@@ -212,11 +222,14 @@
         <div id="leaderboard-content"></div>
     </div>
     <canvas id="minimap" width="150" height="150"></canvas>
-    <div id="settings-icon">
+    
+    <input type="checkbox" id="settings-toggle" style="display: none;">
+    
+    <label for="settings-toggle" id="settings-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
         </svg>
-    </div>
+    </label>
     <div id="settings-panel">
         <h2>Game Controls</h2>
         <div class="control-group">
@@ -238,7 +251,7 @@
             <div class="control-item">
                 <span>Dark Mode</span>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
+                    <input type="checkbox" id="dark-mode-toggle">
                     <span class="toggle-slider"></span>
                 </label>
             </div>
@@ -251,11 +264,6 @@
             </div>
         </div>
     </div>
-    <script>
-        function toggleDarkMode() {
-            document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? '' : 'dark');
-        }
-    </script>
     <script type="module" src="{{ url_for('static', filename='js/game.js') }}"></script>
 </body>
 </html>
