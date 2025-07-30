@@ -6,7 +6,7 @@ This entire application was written from scratch by Cascade in the Windsurf Edit
 
 ## Prerequisites
 
-- Python 3.7 or higher
+- Python 3.12 or higher
 - Node.js and npm
 
 ## Getting Started
