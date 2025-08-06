@@ -6,7 +6,9 @@ export const gameState = {
         y: WORLD_SIZE / 2,
         score: STARTING_SCORE,
         velocityX: 0,
-        velocityY: 0
+        velocityY: 0,
+        lastFoodTime: Date.now(),
+        createdTime: Date.now()
     }],
     playerName: 'Windsurf',
     camera: {

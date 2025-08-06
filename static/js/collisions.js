@@ -12,6 +12,7 @@ export function handleFoodCollisions() {
 
             if (distance < playerSize + FOOD_SIZE) {
                 playerCell.score += FOOD_SCORE;
+                playerCell.lastFoodTime = Date.now();
                 return false;
             }
             return true;
@@ -26,6 +27,7 @@ export function handleFoodCollisions() {
 
             if (distance < aiSize + FOOD_SIZE) {
                 ai.score += FOOD_SCORE;
+                ai.lastFoodTime = Date.now();
                 return false;
             }
             return true;
@@ -92,7 +94,9 @@ export function handlePlayerAICollisions() {
             y: safePos.y,
             score: STARTING_SCORE,
             velocityX: 0,
-            velocityY: 0
+            velocityY: 0,
+            lastFoodTime: Date.now(),
+            createdTime: Date.now()
         });
     }
 }
@@ -171,7 +175,9 @@ export function respawnEntities() {
             y: safePos.y,
             score: STARTING_SCORE,
             velocityX: 0,
-            velocityY: 0
+            velocityY: 0,
+            lastFoodTime: Date.now(),
+            createdTime: Date.now()
         });
     }
 }

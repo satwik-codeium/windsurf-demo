@@ -19,6 +19,13 @@ export const MERGE_COOLDOWN = 10000;  // Time in ms before cells can merge
 export const MERGE_FORCE = 0.3;       // Strength of the merging force
 export const MERGE_START_FORCE = 0.1; // Initial attraction force (before merge cooldown)
 
+// Decay mechanics
+export const DECAY_RATE = 0.5;           // Points lost per second when decaying
+export const DECAY_IMMUNITY_DURATION = 3000;  // Time in ms after food consumption before decay starts
+export const DECAY_START_DELAY = 5000;   // Initial grace period before decay begins
+export const MIN_DECAY_SIZE = 30;        // Minimum size threshold to prevent cells from becoming too small
+export const AI_DECAY_RATE = 0.3;        // Slower decay rate for AI cells for balance
+
 export const COLORS = {
     PLAYER: '#008080',  // Teal color
     MINIMAP: {

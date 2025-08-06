@@ -11,7 +11,12 @@ import {
     MERGE_COOLDOWN,
     MERGE_DISTANCE,
     MERGE_FORCE,
-    MERGE_START_FORCE
+    MERGE_START_FORCE,
+    DECAY_RATE,
+    DECAY_IMMUNITY_DURATION,
+    DECAY_START_DELAY,
+    MIN_DECAY_SIZE,
+    AI_DECAY_RATE
 } from './config.js';
 
 const AI_NAMES = [
@@ -31,6 +36,36 @@ const AI_NAMES = [
 function getUnusedAIName() {
     const usedNames = new Set(gameState.aiPlayers.map(ai => ai.name));
     return AI_NAMES.find(name => !usedNames.has(name)) || AI_NAMES[0];
+}
+
+export function applyDecay() {
+    const now = Date.now();
+    
+    gameState.playerCells.forEach(cell => {
+        if (!cell.lastFoodTime) cell.lastFoodTime = now;
+        if (!cell.createdTime) cell.createdTime = now - DECAY_START_DELAY - 1;
+        
+        const timeSinceFood = now - cell.lastFoodTime;
+        const timeSinceStart = now - cell.createdTime;
+        
+        if (timeSinceFood > DECAY_IMMUNITY_DURATION && timeSinceStart > DECAY_START_DELAY) {
+            const decayAmount = DECAY_RATE * (1/60); // Per frame decay (assuming 60fps)
+            cell.score = Math.max(MIN_DECAY_SIZE, cell.score - decayAmount);
+        }
+    });
+    
+    gameState.aiPlayers.forEach(ai => {
+        if (!ai.lastFoodTime) ai.lastFoodTime = now;
+        if (!ai.createdTime) ai.createdTime = now - DECAY_START_DELAY - 1;
+        
+        const timeSinceFood = now - ai.lastFoodTime;
+        const timeSinceStart = now - ai.createdTime;
+        
+        if (timeSinceFood > DECAY_IMMUNITY_DURATION && timeSinceStart > DECAY_START_DELAY) {
+            const decayAmount = AI_DECAY_RATE * (1/60); // Per frame decay (assuming 60fps)
+            ai.score = Math.max(MIN_DECAY_SIZE, ai.score - decayAmount);
+        }
+    });
 }
 
 function updateCellMerging() {
@@ -158,7 +193,9 @@ function updateCellMerging() {
                 score: totalScore,  // This is the sum of all merged cell scores
                 velocityX: avgVelocityX,
                 velocityY: avgVelocityY,
-                splitTime: 0  // Reset split time for merged cell
+                splitTime: 0,  // Reset split time for merged cell
+                lastFoodTime: Date.now(),
+                createdTime: Date.now()
             });
         });
     }
@@ -221,7 +258,9 @@ export function splitPlayerCell(cell) {
         score: cell.score / 2,
         velocityX: direction.x * SPLIT_VELOCITY,
         velocityY: direction.y * SPLIT_VELOCITY,
-        splitTime: now
+        splitTime: now,
+        lastFoodTime: Date.now(),
+        createdTime: Date.now()
     };
 
     // Update original cell
@@ -229,6 +268,7 @@ export function splitPlayerCell(cell) {
     cell.velocityX = -direction.x * SPLIT_VELOCITY * 0.5;
     cell.velocityY = -direction.y * SPLIT_VELOCITY * 0.5;
     cell.splitTime = now;
+    cell.lastFoodTime = Date.now();
 
     // Add new cell
     gameState.playerCells.push(newCell);
@@ -285,7 +325,9 @@ export function initEntities() {
             score: AI_STARTING_SCORE,
             color: `hsl(${Math.random() * 360}, 70%, 50%)`,
             direction: Math.random() * Math.PI * 2,
-            name: getUnusedAIName()
+            name: getUnusedAIName(),
+            lastFoodTime: Date.now(),
+            createdTime: Date.now()
         };
         gameState.aiPlayers.push(ai);
     }
@@ -308,6 +350,8 @@ export function respawnAI() {
         score: AI_STARTING_SCORE,
         color: `hsl(${Math.random() * 360}, 70%, 50%)`,
         direction: Math.random() * Math.PI * 2,
-        name: name
+        name: name,
+        lastFoodTime: Date.now(),
+        createdTime: Date.now()
     };
 }

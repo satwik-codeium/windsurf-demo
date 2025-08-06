@@ -1,6 +1,6 @@
 import { gameState } from './gameState.js';
 import { getSize, calculateCenterOfMass } from './utils.js';
-import { WORLD_SIZE, COLORS, FOOD_SIZE } from './config.js';
+import { WORLD_SIZE, COLORS, FOOD_SIZE, DECAY_IMMUNITY_DURATION } from './config.js';
 
 let canvas, ctx, minimapCanvas, minimapCtx, scoreElement, leaderboardContent;
 
@@ -29,13 +29,25 @@ function drawCircle(x, y, value, color, isFood) {
     ctx.fill();
 }
 
-function drawCellWithName(x, y, score, color, name) {
+function drawCellWithName(x, y, score, color, name, lastFoodTime) {
     const size = getSize(score);
+    const now = Date.now();
+    const timeSinceFood = lastFoodTime ? now - lastFoodTime : 0;
+    
+    const isImmune = timeSinceFood < DECAY_IMMUNITY_DURATION;
+    const isDecaying = timeSinceFood > DECAY_IMMUNITY_DURATION;
+    
+    let cellColor = color;
+    if (isImmune) {
+        cellColor = color === COLORS.PLAYER ? '#00a0a0' : color;
+    } else if (isDecaying) {
+        cellColor = color === COLORS.PLAYER ? '#a08080' : color;
+    }
     
     // Draw cell
     ctx.beginPath();
     ctx.arc(x, y, size, 0, Math.PI * 2);
-    ctx.fillStyle = color;
+    ctx.fillStyle = cellColor;
     ctx.fill();
 
     // Draw name
@@ -89,7 +101,7 @@ export function drawGame() {
         
         if (screenX >= -size && screenX <= canvas.width + size &&
             screenY >= -size && screenY <= canvas.height + size) {
-            drawCellWithName(screenX, screenY, ai.score, ai.color, ai.name);
+            drawCellWithName(screenX, screenY, ai.score, ai.color, ai.name, ai.lastFoodTime);
         }
     });
 
@@ -101,7 +113,7 @@ export function drawGame() {
         
         if (screenX >= -size && screenX <= canvas.width + size &&
             screenY >= -size && screenY <= canvas.height + size) {
-            drawCellWithName(screenX, screenY, cell.score, COLORS.PLAYER, gameState.playerName);
+            drawCellWithName(screenX, screenY, cell.score, COLORS.PLAYER, gameState.playerName, cell.lastFoodTime);
         }
     });
 
