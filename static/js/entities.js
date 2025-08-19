@@ -28,7 +28,7 @@ const AI_NAMES = [
 ];
 
 // Function to get an unused AI name
-function getUnusedAIName() {
+export function getUnusedAIName() {
     const usedNames = new Set(gameState.aiPlayers.map(ai => ai.name));
     return AI_NAMES.find(name => !usedNames.has(name)) || AI_NAMES[0];
 }
