@@ -1,12 +1,12 @@
 // UI Controls
 
-function loadDarkMode() {
+export function loadDarkMode() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : '');
     document.getElementById('dark-mode-toggle').checked = isDarkMode;
 }
 
-function saveDarkMode(isDarkMode) {
+export function saveDarkMode(isDarkMode) {
     localStorage.setItem('darkMode', isDarkMode);
 }
 
