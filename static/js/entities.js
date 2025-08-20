@@ -311,3 +311,6 @@ export function respawnAI() {
         name: name
     };
 }
+
+// Export internal functions for testing
+export { getUnusedAIName, updateCellMerging };
