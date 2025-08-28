@@ -33,6 +33,9 @@ function getUnusedAIName() {
     return AI_NAMES.find(name => !usedNames.has(name)) || AI_NAMES[0];
 }
 
+// Export for testing
+export { getUnusedAIName };
+
 function updateCellMerging() {
     const now = Date.now();
     const cellsToMerge = [];
@@ -163,6 +166,9 @@ function updateCellMerging() {
         });
     }
 }
+
+// Export for testing
+export { updateCellMerging };
 
 export function updatePlayer() {
     const dx = mouse.x - window.innerWidth / 2;
